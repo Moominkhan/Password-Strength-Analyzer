@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Password Strength Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h1>🔐 Password Strength Analyzer</h1>
+
+    <form method="POST">
+        <div class="password-box">
+            <input type="password"
+                   id="password"
+                   name="password"
+                   placeholder="Enter Password"
+                   required>
+
+            <button type="button" onclick="togglePassword()">👁</button>
+        </div>
+
+        <button type="submit" class="analyze-btn">
+            Analyze Password
+        </button>
+    </form>
+
+    {% if result %}
+    <div class="result">
+
+        <h2>{{ trophy }} {{ result }}</h2>
+
+        <p><strong>Score:</strong> {{ score }}/6</p>
+
+        <p><strong>Entropy:</strong> {{ entropy }} bits</p>
+
+        <div class="strength-bar">
+            <div class="strength-fill {{ color }}"></div>
+        </div>
+
+        <p>{{ suggestion }}</p>
+
+    </div>
+    {% endif %}
+
+    {% if suggestions %}
+    <div class="result">
+        <h3>🔍 Password Improvements</h3>
+
+        <ul style="text-align:left; margin-top:10px;">
+            {% for item in suggestions %}
+            <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if recommended_password %}
+    <div class="result">
+        <h3>🔑 Recommended Strong Password</h3>
+
+        <input
+            type="text"
+            id="generatedPassword"
+            value="{{ recommended_password }}"
+            readonly
+            style="width:100%;padding:10px;margin-top:10px;border-radius:10px;"
+        >
+
+        <button
+            type="button"
+            class="analyze-btn"
+            style="margin-top:10px;"
+            onclick="copyPassword()">
+            📋 Copy Password
+        </button>
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+function togglePassword() {
+    const pwd = document.getElementById("password");
+
+    if (pwd.type === "password") {
+        pwd.type = "text";
+    } else {
+        pwd.type = "password";
+    }
+}
+
+function copyPassword() {
+    const passwordField =
+        document.getElementById("generatedPassword");
+
+    navigator.clipboard.writeText(passwordField.value);
+
+    alert("Password copied successfully!");
+}
+</script>
+
+</body>
+</html>
